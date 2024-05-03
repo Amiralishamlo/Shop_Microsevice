@@ -22,7 +22,7 @@ namespace ProductService.Controllers
             return Ok(data);
         }
         [HttpGet("Id")]
-        public IActionResult Get(Guid id)
+        public IActionResult Get([FromQuery]Guid id)
         {
             var data = _ProductService.GetProductBy(id);
             return Ok(data);

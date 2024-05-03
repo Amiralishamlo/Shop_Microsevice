@@ -21,9 +21,9 @@ namespace Microservice.Web.Frontend.Servcies.ProductServices
 		}
         public ProductDto Getproduct(Guid Id)
         {
-            var request = new RestRequest($"/api/Product/{Id}", Method.Get);
+            var request = new RestRequest($"/api/Product/Id?id={Id}", Method.Get);
 
-            var response = restClient.Execute(request);
+            RestResponse response = restClient.Execute(request);
 
             var product = JsonSerializer.Deserialize<ProductDto>(response.Content);
             return product;
