@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region Connection string
-builder.Services.AddDbContext<ProductDatabaseContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("ProductConnection")));
+builder.Services.AddDbContext<ProductDatabaseContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("ProductService")));
 #endregion
 builder.Services.AddTransient<IProductService, ProductServices>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();

@@ -1,3 +1,4 @@
+using Microservice.Web.Frontend.Servcies.BasketService;
 using Microservice.Web.Frontend.Servcies.ProductServices;
 using RestSharp;
 
@@ -9,6 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IProductService>(x =>
 {
 	return new ProductService(new RestClient(builder.Configuration["MicroServiceAddress:Product:url"]));
+});
+
+builder.Services.AddScoped<IBasketService>(x =>
+{
+    return new BasketService(new RestClient(builder.Configuration["MicroServiceAddress:BasketService:url"]));
 });
 
 var app = builder.Build();
