@@ -3,19 +3,8 @@ using BasketService.Infrastructure.Contexts;
 using BasketService.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace BasketService.Model.Services
+namespace BasketService.Model.Services.BasketServices
 {
-    public interface IBasketService
-    {
-        BasketDto GetOrCreateBasketForUser(string UserId);
-        BasketDto GetBasket(string UserId);
-        void AddItemToBasket(AddItemToBasketDto item);
-        void RemoveItemFromBasket(Guid ItemId);
-        void SetQuantities(Guid itemId, int quantity);
-        void TransferBasket(string anonymousId, string UserId);
-        void ApplyDiscountToBasket(Guid BasketId, Guid DiscountId);
-    }
-
     public class BasketService : IBasketService
     {
         private readonly BasketDataBaseContext context;
@@ -35,8 +24,37 @@ namespace BasketService.Model.Services
                 throw new Exception("Basket not founs....!");
 
             var basketItem = mapper.Map<BasketItem>(item);
+            var Productdtos = mapper.Map<ProductDto>(item);
+            CreateProduct(Productdtos);
             basket.Items.Add(basketItem);
             context.SaveChanges();
+        }
+        private ProductDto GetProduct(Guid productId)
+        {
+            var existProduct = context.Products.SingleOrDefault(x => x.Id == productId);
+            if (existProduct != null)
+            {
+                var product = mapper.Map<ProductDto>(existProduct);
+                return product;
+            }
+            else
+                return null;
+        }
+
+        private ProductDto CreateProduct(ProductDto product)
+        {
+            var existProduct = GetProduct(product.ProductId);
+            if (product != null)
+            {
+                return existProduct;
+            }
+            else
+            {
+                var newproduct = mapper.Map<Product>(existProduct);
+                context.Products.Add(newproduct);
+                context.SaveChanges();
+                return mapper.Map<ProductDto>(newproduct);
+            }
         }
 
         public void ApplyDiscountToBasket(Guid BasketId, Guid DiscountId)
@@ -51,7 +69,7 @@ namespace BasketService.Model.Services
         public BasketDto GetBasket(string UserId)
         {
             var basket = context.Baskets
-            .Include(p => p.Items)
+            .Include(p => p.Items).ThenInclude(x => x.Product)
             .SingleOrDefault(p => p.UserId == UserId);
 
             if (basket == null)
@@ -66,10 +84,10 @@ namespace BasketService.Model.Services
                 {
                     ProductId = item.ProductId,
                     Id = item.Id,
-                    ProductName = item.ProductName,
+                    ProductName = item.Product.ProductName,
                     Quantity = item.Quantity,
-                    UnitPrice = item.UnitPrice,
-                    ImageUrl = item.ImageUrl
+                    UnitPrice = item.Product.UnitPrice,
+                    ImageUrl = item.Product.ImageUrl,
                 }).ToList(),
             };
         }
@@ -78,7 +96,7 @@ namespace BasketService.Model.Services
         {
 
             var basket = context.Baskets
-                .Include(p => p.Items)
+                .Include(p => p.Items).ThenInclude(x => x.Product)
                 .SingleOrDefault(p => p.UserId == UserId);
             if (basket == null)
             {
@@ -94,10 +112,10 @@ namespace BasketService.Model.Services
                 {
                     ProductId = item.ProductId,
                     Id = item.Id,
-                    ProductName = item.ProductName,
+                    ProductName = item.Product.ProductName,
                     Quantity = item.Quantity,
-                    UnitPrice = item.UnitPrice,
-                    ImageUrl = item.ImageUrl,
+                    UnitPrice = item.Product.UnitPrice,
+                    ImageUrl = item.Product.ImageUrl,
                 }).ToList(),
             };
         }
@@ -137,11 +155,8 @@ namespace BasketService.Model.Services
             {
                 userBasket.Items.Add(new BasketItem
                 {
-                    ImageUrl = item.ImageUrl,
                     ProductId = item.ProductId,
-                    ProductName = item.ProductName,
                     Quantity = item.Quantity,
-                    UnitPrice = item.UnitPrice,
                 });
             }
             context.Baskets.Remove(anonymousBasket);
@@ -160,43 +175,5 @@ namespace BasketService.Model.Services
             };
         }
 
-    }
-
-    public class BasketDto
-    {
-        public Guid Id { get; set; }
-        public string UserId { get; set; }
-        public Guid? DiscountId { get; set; }
-        public List<BasketItemDto> Items { get; set; } = new List<BasketItemDto>();
-        public int Total()
-        {
-            if (Items.Count > 0)
-            {
-                int total = Items.Sum(p => p.UnitPrice * p.Quantity);
-                return total;
-            }
-            return 0;
-        }
-
-    }
-
-    public class BasketItemDto
-    {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public int UnitPrice { get; set; }
-        public int Quantity { get; set; }
-        public string ImageUrl { get; set; }
-    }
-
-    public class AddItemToBasketDto
-    {
-        public Guid basketId { get; set; }
-        public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public int UnitPrice { get; set; }
-        public int Quantity { get; set; }
-        public string ImageUrl { get; set; }
     }
 }

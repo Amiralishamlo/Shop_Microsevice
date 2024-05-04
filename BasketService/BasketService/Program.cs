@@ -1,6 +1,6 @@
 using BasketService.Infrastructure.Contexts;
 using BasketService.Infrastructure.Mapping;
-using BasketService.Model.Services;
+using BasketService.Model.Services.BasketServices;
 using BasketService.Model.Services.DiscountServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +18,7 @@ builder.Services.AddDbContext<BasketDataBaseContext>(x => x.UseSqlServer(builder
 #endregion
 builder.Services.AddAutoMapper(typeof(BasketMappingProfile));
 
-builder.Services.AddTransient<IBasketService, BasketService.Model.Services.BasketService>();
+builder.Services.AddTransient<IBasketService, BasketService.Model.Services.BasketServices.BasketService>();
 builder.Services.AddTransient<IDiscountService, BasketService.Model.Services.DiscountServices.DiscountService>();
 
 var app = builder.Build();

@@ -9,6 +9,9 @@ namespace BasketService.Infrastructure.Mapping
         public BasketMappingProfile()
         {
             CreateMap<BasketItem, AddItemToBasketDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<ProductDto, AddItemToBasketDto>().ReverseMap();
+
         }
     }
 }
