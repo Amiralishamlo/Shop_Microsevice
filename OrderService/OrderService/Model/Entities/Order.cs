@@ -11,26 +11,26 @@ namespace OrderService.Model.Entities
         public string UserId { get; private set; }
         public DateTime OrderPlaced { get; private set; }
         public bool OrderPaid { get; private set; }
+        public string FirstName { get;private set; }
+        public string LastName { get;private set; }
+        public string Address { get;private set; }
+        public string PhoneNumber { get;private set; }
+        public int TotlaPrice { get; set; }
         public ICollection<OrderLine> OrderLines { get; private set; }
 
-        public Order(string UserId, List<OrderLine> OrderLines)
+        public Order(string UserId, List<OrderLine> OrderLines, string firstName, string lastName, string address, string phoneNumber, int totlaPrice)
         {
             this.UserId = UserId;
             this.OrderPaid = false;
             this.OrderPlaced = DateTime.Now;
             this.OrderLines = OrderLines;
+            FirstName = firstName;
+            LastName = lastName;
+            Address = address;
+            PhoneNumber = phoneNumber;
+            TotlaPrice = totlaPrice;
         }
         public Order() { }
-    }
-    public class OrderLine
-    {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public int ProductPrice { get; set; }
-        public int Quantity { get; set; }
-        public Order Order { get; set; }
-        public int OrderId { get; set; }
     }
 
 

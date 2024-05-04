@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using OrderService.Model.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using OrderService.Model.Services.OrderServices;
 
 namespace OrderService.Controllers
 {
@@ -31,13 +26,6 @@ namespace OrderService.Controllers
         {
             var order = orderService.GetOrderById(OrderId);
             return Ok(order);
-        }
-
-        [HttpPost]
-        public IActionResult Post([FromBody] AddOrderDto order)
-        {
-            orderService.AddOrder(order);
-            return Ok();
         }
 
     }

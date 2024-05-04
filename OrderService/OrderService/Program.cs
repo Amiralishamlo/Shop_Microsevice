@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Infrastructure.Context;
-using OrderService.Model.Services;
+using OrderService.Model.Services.OrderServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OrderDataBaseContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("OrderService")));
 
-builder.Services.AddTransient<IOrderService, OrderService.Model.Services.OrderService>();
+builder.Services.AddTransient<IOrderService, OrderService.Model.Services.OrderServices.OrderService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
