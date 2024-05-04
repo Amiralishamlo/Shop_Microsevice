@@ -1,3 +1,4 @@
+using DiscountService.GRPC;
 using DiscountService.Infrastructure.Contexts;
 using DiscountService.Infrastructure.Mapping;
 using DiscountService.Model.Services;
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<DiscountDataBaseContext>(x => x.UseSqlServer(build
 #endregion
 builder.Services.AddAutoMapper(typeof(DiscountMappingProfile));
 builder.Services.AddTransient<IDiscountService, DiscountService.Model.Services.DiscountService>();
+builder.Services.AddGrpc();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +32,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+
+app.MapGrpcService<GRPCDiscountService>();
 app.MapControllers();
+
 
 app.Run();

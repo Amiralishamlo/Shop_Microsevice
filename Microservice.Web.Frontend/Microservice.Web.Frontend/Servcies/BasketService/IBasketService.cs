@@ -9,6 +9,5 @@ namespace Microservice.Web.Frontend.Servcies.BasketService
         ResultDto DeleteFromBasket(Guid Id);
         ResultDto UpdateQuantity(Guid BasketItemId, int quantity);
         ResultDto ApplyDiscountToBasket(Guid basketId, Guid discountId);
-
     }
 }

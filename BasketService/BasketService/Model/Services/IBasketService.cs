@@ -13,7 +13,7 @@ namespace BasketService.Model.Services
         void RemoveItemFromBasket(Guid ItemId);
         void SetQuantities(Guid itemId, int quantity);
         void TransferBasket(string anonymousId, string UserId);
-
+        void ApplyDiscountToBasket(Guid BasketId, Guid DiscountId);
     }
 
     public class BasketService : IBasketService
@@ -36,6 +36,15 @@ namespace BasketService.Model.Services
 
             var basketItem = mapper.Map<BasketItem>(item);
             basket.Items.Add(basketItem);
+            context.SaveChanges();
+        }
+
+        public void ApplyDiscountToBasket(Guid BasketId, Guid DiscountId)
+        {
+            var basket = context.Baskets.Find(BasketId);
+            if (basket == null)
+                throw new Exception("Basket Not Found ...");
+            basket.DiscountId = DiscountId;
             context.SaveChanges();
         }
 
@@ -80,6 +89,7 @@ namespace BasketService.Model.Services
             {
                 Id = basket.Id,
                 UserId = basket.UserId,
+                DiscountId = basket.DiscountId,
                 Items = basket.Items.Select(item => new BasketItemDto
                 {
                     ProductId = item.ProductId,
@@ -156,6 +166,7 @@ namespace BasketService.Model.Services
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }
+        public Guid? DiscountId { get; set; }
         public List<BasketItemDto> Items { get; set; } = new List<BasketItemDto>();
         public int Total()
         {

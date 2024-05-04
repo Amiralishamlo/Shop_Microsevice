@@ -43,5 +43,11 @@ namespace BasketService.Controllers
             basketService.SetQuantities(basketItemId, quantity);
             return Ok();
         }
+        [HttpPut("{basketId}/{discountId}")]
+        public IActionResult ApplyDiscountToBasket(Guid BasketId,Guid DiscountId)
+        {
+            basketService.ApplyDiscountToBasket(BasketId,DiscountId);
+            return Accepted();
+        }
     }
 }

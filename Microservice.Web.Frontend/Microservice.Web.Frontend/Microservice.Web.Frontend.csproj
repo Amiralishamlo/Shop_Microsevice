@@ -14,8 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\DiscountService\DiscountService\Proto\discountprotobuff.proto" GrpcServices="Both">
+      <Link>Protos\discountprotobuff.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
 </Project>
